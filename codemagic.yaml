@@ -1,11 +1,14 @@
 workflows:
   android-build:
-    name: FlorisBoard Build
+    name: FlorisBoard APK Build
 
     max_build_duration: 60
 
     environment:
       java: 17
+
+      android_signing:
+        - keystore_reference
 
     cache:
       cache_paths:
@@ -13,17 +16,18 @@ workflows:
         - ~/.gradle/wrapper
 
     scripts:
-      - name: Show Java version
-        script: java -version
+      - name: Set execute permission
+        script: chmod +x gradlew
 
-      - name: Give Gradle permission
-        script: chmod +x ./gradlew
-
-      - name: Clean project
+      - name: Clean Gradle
         script: ./gradlew clean
 
       - name: Build Debug APK
-        script: ./gradlew assembleDebug --stacktrace
+        script: |
+          ./gradlew assembleDebug \
+          --no-daemon \
+          --stacktrace \
+          --warning-mode all
 
     artifacts:
       - app/build/outputs/**/*.apk
