@@ -7,20 +7,18 @@ workflows:
     environment:
       java: 21
 
-    cache:
-      cache_paths:
-        - ~/.gradle/caches
-        - ~/.gradle/wrapper
-
     scripts:
+      - name: Verify Java
+        script: java -version
+
       - name: Setup Permission
         script: chmod +x gradlew
 
       - name: Clean Project
-        script: ./gradlew clean
+        script: ./gradlew clean --no-daemon
 
       - name: Build APK
-        script: ./gradlew assembleDebug --stacktrace --warning-mode all
+        script: ./gradlew assembleDebug --stacktrace --no-daemon
 
     artifacts:
       - "**/*.apk"
